@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Polling System</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 36px;
+            color: #444;
+            margin-top: 30px;
+        }
+        .poll-container {
+            background-color: #ffffff;
+            padding: 30px;
+            margin: 30px auto;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        h3 {
+            font-size: 24px;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        /* Style for the radio buttons */
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+            margin-bottom: 15px;
+            display: block;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .vote-button, .reset-button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .vote-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .vote-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .reset-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .reset-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        /* Results Section */
+        .results {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 18px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            margin: 8px 0;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        li:hover {
+            background-color: #f1f3f5;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Football Polling System</h1>
+    <div class="poll-container">
+        <h3>Vote for your favorite football team:</h3>
+        <form id="pollForm">
+            <input type="radio" id="barcelona" name="team" value="FC Barcelona">
+            <label for="barcelona">FC Barcelona</label><br>
+            <input type="radio" id="realmadrid" name="team" value="Real Madrid CF">
+            <label for="realmadrid">Real Madrid CF</label><br>
+            <input type="radio" id="bayern" name="team" value="FC Bayern Munich">
+            <label for="bayern">FC Bayern Munich</label><br>
+            <input type="radio" id="manunited" name="team" value="Manchester United">
+            <label for="manunited">Manchester United</label><br>
+            <input type="radio" id="acmilan" name="team" value="AC Milan">
+            <label for="acmilan">AC Milan</label><br><br>
+            <button type="button" class="vote-button" onclick="castVote()">Vote</button>
+            <button type="button" class="reset-button" onclick="resetPoll()">Reset</button>
+        </form>
+    </div>
+
+    <div class="results" id="results">
+        <h3>Polling Results:</h3>
+        <ul id="resultList">
+            <li>FC Barcelona: 0 votes</li>
+            <li>Real Madrid CF: 0 votes</li>
+            <li>FC Bayern Munich: 0 votes</li>
+            <li>Manchester United: 0 votes</li>
+            <li>AC Milan: 0 votes</li>
+        </ul>
+    </div>
+
+    <script>
+        let votes = {
+            "FC Barcelona": 0,
+            "Real Madrid CF": 0,
+            "FC Bayern Munich": 0,
+            "Manchester United": 0,
+            "AC Milan": 0
+        };
+
+        function castVote() {
+            const form = document.getElementById("pollForm");
+            const selectedTeam = form.team.value;
+
+            if (selectedTeam) {
+                votes[selectedTeam]++;
+                alert(`Your vote for ${selectedTeam} has been recorded.`);
+                displayResults();
+            } else {
+                alert("Please select a team to vote for.");
+            }
+        }
+
+        function displayResults() {
+            let resultList = document.getElementById("resultList");
+            resultList.innerHTML = "";
+            for (let team in votes) {
+                let listItem = document.createElement("li");
+                listItem.textContent = `${team}: ${votes[team]} votes`;
+                resultList.appendChild(listItem);
+            }
+            document.getElementById("results").style.display = "block";
+        }
+
+        function resetPoll() {
+            // Reset the form radio buttons
+            document.getElementById("pollForm").reset();
+            
+            // Reset the votes count
+            votes = {
+                "FC Barcelona": 0,
+                "Real Madrid CF": 0,
+                "FC Bayern Munich": 0,
+                "Manchester United": 0,
+                "AC Milan": 0
+            };
+
+            // Clear the result display
+            document.getElementById("results").style.display = "none";
+        }
+    </script>
+</body>
+</html>
