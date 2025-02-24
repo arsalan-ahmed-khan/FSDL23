@@ -14,24 +14,32 @@ const WeatherApp = () => {
   
     // Use the encoded city name in the API request
     const encodedCity = encodeURIComponent(city);  // Encode the city name
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&units=metric&appid=${apiKey}`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&units=metric&appid=5ba326cebfa91ac610bd1b7ae4dd48d8
+`;
   
     try {
       const response = await axios.get(apiUrl);
       console.log(response.data);  // Log the response data
   
-      if (response.data.cod !== 200) {
-        setError('City not found');
-        setWeather(null);
-      } else {
+      if (response.data.cod === 200) {
         setWeather(response.data);
         setError('');
+      } else {
+        setError('City not found');
+        setWeather(null);
       }
+      
     } catch (err) {
-      console.log(err);  // Log any error
+      console.error(err); // Log the full error
+      if (err.response) {
+        // If the error has a response (meaning it came from the server)
+        console.error('Error response:', err.response.data);
+        console.error('Error status:', err.response.status);
+      }
       setError('City not found');
       setWeather(null);
     }
+    
   };
   
 
