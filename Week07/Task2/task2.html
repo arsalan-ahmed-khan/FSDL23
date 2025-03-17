@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentRecordApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record Management</title>
+    <!-- Include AngularJS from CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .btn-primary:disabled {
+            background-color: #b3d7ff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" ng-controller="StudentRecordController">
+        <h1>Student Record Management</h1>
+
+        <!-- Student Form -->
+        <form name="studentForm" novalidate>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" ng-model="student.name" class="form-control" required>
+                <span class="error" ng-show="studentForm.name.$touched && studentForm.name.$invalid">
+                    Name is required.
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" ng-model="student.age" class="form-control" required min="10" max="100">
+                <span class="error" ng-show="studentForm.age.$touched && studentForm.age.$invalid">
+                    Age must be between 10 and 100.
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" ng-model="student.email" class="form-control" required>
+                <span class="error" ng-show="studentForm.email.$touched && studentForm.email.$invalid">
+                    Please enter a valid email address.
+                </span>
+            </div>
+
+            <div class="form-group">
+                <button ng-click="addStudent()" ng-disabled="studentForm.$invalid" class="btn btn-primary">
+                    Add Student
+                </button>
+            </div>
+        </form>
+
+        <!-- Student List -->
+        <h2>Student List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="student in students">
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.age }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>
+                        <button ng-click="deleteStudent($index)" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Define the AngularJS module
+        var app = angular.module('studentRecordApp', []);
+
+        // Define the controller
+        app.controller('StudentRecordController', function($scope) {
+            // Initialize the students array
+            $scope.students = [];
+
+            // Initialize the student object
+            $scope.student = {
+                name: '',
+                age: null,
+                email: ''
+            };
+
+            // Function to add a student
+            $scope.addStudent = function() {
+                if ($scope.studentForm.$valid) {
+                    // Add the student to the list
+                    $scope.students.push(angular.copy($scope.student));
+
+                    // Reset the form
+                    $scope.student = {
+                        name: '',
+                        age: null,
+                        email: ''
+                    };
+
+                    // Reset the form state
+                    $scope.studentForm.$setPristine();
+                    $scope.studentForm.$setUntouched();
+                }
+            };
+
+            // Function to delete a student
+            $scope.deleteStudent = function(index) {
+                $scope.students.splice(index, 1);
+            };
+        });
+    </script>
+
+</body>
+</html>
