@@ -151,9 +151,9 @@
         </span>
 
         <label>Age:</label>
-        <input type="number" name="age" ng-model="student.age" required min="18" max="100">
+        <input type="number" name="age" ng-model="student.age" required min="1" max="100">
         <span class="error" ng-show="studentForm.age.$touched && studentForm.age.$invalid">
-            Age must be between 18 and 100.
+            Age must be between 1 and 100.
         </span>
 
         <button type="submit" ng-disabled="studentForm.$invalid">Add Student</button>
