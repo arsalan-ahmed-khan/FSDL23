@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Records</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #FFB6C1, #87CEEB);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #4CAF50;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus {
+            border-color: #FF6347;
+            outline: none;
+        }
+
+        button {
+            background-color: #FF6347;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #FF4500;
+        }
+
+        button:disabled {
+            background-color: #D3D3D3;
+            cursor: not-allowed;
+        }
+
+        .error, .valid {
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .valid {
+            color: #2ecc71;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #FF6347;
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        td button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        td button:hover {
+            background-color: #45a049;
+        }
+
+        hr {
+            border: 1px solid #ddd;
+            margin: 20px auto;
+            width: 80%;
+        }
+    </style>
+</head>
+<body ng-controller="StudentController">
+
+    <h2>Student Records</h2>
+
+    <!-- Student Form -->
+    <form name="studentForm" ng-submit="addStudent()" novalidate>
+
+        <label>Name:</label>
+        <input type="text" name="name" ng-model="student.name" ng-change="checkName()" required minlength="3">
+        <span class="error" ng-show="studentForm.name.$touched && studentForm.name.$invalid">
+            Name is required (min 3 characters).
+        </span>
+
+        <label>Email:</label>
+        <input type="email" name="email" ng-model="student.email" required>
+        <span class="error" ng-show="studentForm.email.$touched && studentForm.email.$invalid">
+            Enter a valid email.
+        </span>
+
+        <label>Age:</label>
+        <input type="number" name="age" ng-model="student.age" required min="18" max="100">
+        <span class="error" ng-show="studentForm.age.$touched && studentForm.age.$invalid">
+            Age must be between 18 and 100.
+        </span>
+
+        <button type="submit" ng-disabled="studentForm.$invalid">Add Student</button>
+        <p class="valid" ng-show="studentForm.$valid">Form is valid.</p>
+        <p class="error" ng-show="studentForm.$invalid">Form is invalid.</p>
+
+    </form>
+
+    <hr>
+
+    <!-- Student List -->
+    <h3 style="text-align:center;">Student List</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="s in students">
+            <td>{{ s.name }}</td>
+            <td>{{ s.email }}</td>
+            <td>{{ s.age }}</td>
+            <td><button ng-click="deleteStudent($index)">Delete</button></td>
+        </tr>
+    </table>
+
+    <script>
+        var app = angular.module('studentApp', []);
+
+        app.controller('StudentController', function($scope) {
+            $scope.students = [];
+            $scope.student = {};
+
+            $scope.checkName = function() {
+                console.log("Name changed:", $scope.student.name);
+            };
+
+            $scope.addStudent = function() {
+                if ($scope.studentForm.$valid) {
+                    $scope.students.push(angular.copy($scope.student));
+                    console.log("Student added:", $scope.student);
+                    $scope.student = {};
+                    $scope.studentForm.$setPristine();
+                    $scope.studentForm.$setUntouched();
+                }
+            };
+
+            $scope.deleteStudent = function(index) {
+                $scope.students.splice(index, 1);
+                console.log("Student deleted at index:", index);
+            };
+        });
+    </script>
+
+</body>
+</html>
